@@ -1,5 +1,6 @@
 module AoC (
-adventOfCode
+adventOfCode,
+noOp
 ) where
 
 import Solving (solve, showSolution, Parser, Computor)
@@ -16,3 +17,6 @@ adventOfCode parseF computeF day cases = do
             putStrLn $ showSolution answer 
         else putStrLn "Test failure - please fix before attempting on full problem"
     return ()
+
+noOp :: a -> Maybe b
+noOp _ = Nothing
