@@ -1,5 +1,5 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
 import Parsing(Direction(..), parseDirections)
 import Computing(computeCode)
 

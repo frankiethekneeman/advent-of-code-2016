@@ -12,3 +12,5 @@
 
 clean:
 	rm -rf clutter */*.hxe */input
+
+all: $(foreach day,$(shell seq 1 24),$(foreach part,1 2,$(day)/$(part))) 25/1
