@@ -1,4 +1,7 @@
-module Seqs ( splitOn ) where
+module Seqs (
+splitOn,
+chunksOf
+) where
 
 import Data.List (isPrefixOf)
 
@@ -7,6 +10,12 @@ splitOn _ [] = []
 splitOn delimiter list = first:rest
     where (first, remaining) = splitOnce delimiter list
           rest = splitOn delimiter remaining
+
+chunksOf :: Int -> [a] -> [[a]]
+chunksOf _ [] = []
+chunksOf n l = first:remaining
+    where (first, rest) = splitAt n l
+          remaining = chunksOf n rest
 
 -- NOT EXPORTED
 
