@@ -1,9 +1,17 @@
 module Seqs (
-splitOn,
-chunksOf
+chunksOf,
+collapseRuns,
+count,
+safeHead,
+safeInit,
+safeLast,
+safeMaximumBy,
+safeMinimumBy,
+safeTail,
+splitOn
 ) where
 
-import Data.List (isPrefixOf)
+import Data.List (isPrefixOf, group, maximumBy, minimumBy)
 
 splitOn :: Eq a => [a] -> [a] -> [[a]]
 splitOn _ [] = []
@@ -17,6 +25,20 @@ chunksOf n l = first:remaining
     where (first, rest) = splitAt n l
           remaining = chunksOf n rest
 
+count :: (a -> Bool) -> [a] -> Int
+count f = length . filter f
+
+collapseRuns :: Eq a => [a] -> [(a, Int)]
+collapseRuns = map toTuple . group
+    where toTuple xs = (head xs, length xs)
+
+safeHead = defang head
+safeTail = defang tail
+safeInit = defang init
+safeLast = defang last
+safeMaximumBy = defang2 maximumBy
+safeMinimumBy = defang2 minimumBy
+
 -- NOT EXPORTED
 
 splitOnce :: Eq a => [a] -> [a] -> ([a], [a])
@@ -28,3 +50,11 @@ splitOnce needle haystack
         prefixLength = length needle
         (h:aystack) = haystack
         (l, r) = splitOnce needle aystack
+
+defang :: ([a] -> b) -> [a] -> Maybe b
+defang _ [] = Nothing
+defang f l = Just $ f l
+
+defang2 :: (a -> [b] -> c) -> a -> [b] -> Maybe c
+defang2 _ _ [] = Nothing
+defang2 f a l = Just $ f a l

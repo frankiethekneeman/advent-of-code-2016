@@ -1,0 +1,6 @@
+#!/bin/bash
+while vim -p $1/*.hs shared/*.hs
+do
+    make $1/$2
+    read -p "><"
+done

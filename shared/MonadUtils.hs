@@ -2,7 +2,12 @@ module MonadUtils (
 orError,
 applyRight,
 applyCollapse,
+orElse,
 ) where
+
+orElse :: Maybe a -> a -> a
+orElse (Just x) _ = x
+orElse Nothing x = x
 
 orError :: Maybe a -> b -> Either b a
 orError (Just val) _ = Right val

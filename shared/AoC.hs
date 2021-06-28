@@ -3,10 +3,10 @@ adventOfCode,
 noOp
 ) where
 
-import Solving (solve, showSolution, Parser, Computor)
+import Solving (solve, showSolution, Parser, Computor, Solution)
 import Testing (allTestCases, showTestResult, testsPass, TestCase)
 
-adventOfCode :: Eq b => Show b => Parser a -> Computor a b -> String -> [TestCase b] -> IO ()
+adventOfCode :: Eq b => Solution b => Parser a -> Computor a b -> String -> [TestCase b] -> IO ()
 adventOfCode parseF computeF day cases = do
     results <- allTestCases parseF computeF day cases
     sequence $ map (putStrLn . showTestResult) results

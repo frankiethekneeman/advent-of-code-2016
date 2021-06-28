@@ -2,7 +2,9 @@ module Solving (
 solve,
 showSolution,
 Parser,
-Computor
+Computor,
+Solution,
+toString
 ) where
 
 import MonadUtils (applyRight, orError)
@@ -16,11 +18,19 @@ solve parser computor fname = do
     pure (work parser computor input)
 
 
-showSolution :: Show a => Either String a -> String
+showSolution :: Solution a => Either String a -> String
 showSolution (Left err) = "Error: " ++ err
-showSolution (Right val) = show val
+showSolution (Right val) = toString val
 
 --NOT EXPORTED
+class Solution a where
+    toString :: a -> String
+
+instance {-# OVERLAPPING #-} Solution String where
+    toString = id
+
+instance Show a => Solution a where
+    toString = show
 
 parse :: Parser a -> String -> Either String a
 parse parser input = orError (parser input) "Failed to parse"

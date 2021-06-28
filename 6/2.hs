@@ -1,4 +1,12 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import ParsingUtils (lineByLine)
+import Seqs(safeMinimumBy)
+import Computing(decodeTransmission, toFrequencies, cmpSnd)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "6" []
+examples = [("1", "advent")]
+
+antiMode :: Ord a => [a] -> Maybe a
+antiMode = fmap fst . safeMinimumBy cmpSnd . toFrequencies
+
+main = adventOfCode (lineByLine Just) (decodeTransmission antiMode) "6" []
