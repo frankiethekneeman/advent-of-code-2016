@@ -8,10 +8,11 @@ safeLast,
 safeMaximumBy,
 safeMinimumBy,
 safeTail,
-splitOn
+splitOn,
+update,
 ) where
 
-import Data.List (isPrefixOf, group, maximumBy, minimumBy)
+import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt)
 
 splitOn :: Eq a => [a] -> [a] -> [[a]]
 splitOn _ [] = []
@@ -38,6 +39,15 @@ safeInit = defang init
 safeLast = defang last
 safeMaximumBy = defang2 maximumBy
 safeMinimumBy = defang2 minimumBy
+
+update :: (a -> a) -> Int -> [a] -> [a]
+update f i xs
+    | length xs > i = before ++ [updated] ++ after
+    | otherwise = xs
+    where updated = f toUpdate
+          after = tail rest
+          toUpdate = head rest
+          (before, rest) = splitAt i xs
 
 -- NOT EXPORTED
 
