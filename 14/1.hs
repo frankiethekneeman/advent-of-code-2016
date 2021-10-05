@@ -1,4 +1,6 @@
 module One where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import ParsingUtils (oneLine)
+import Computing(sixtyFourthKey)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "14" []
+main = adventOfCode oneLine (Just . sixtyFourthKey id) "14" [("1", 22728)]

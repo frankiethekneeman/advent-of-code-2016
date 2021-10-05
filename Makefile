@@ -1,4 +1,4 @@
-HOPTS=-XUndecidableInstances -XFlexibleInstances -XTypeSynonymInstances
+HOPTS=-XUndecidableInstances -XFlexibleInstances -XTypeSynonymInstances -XMultiParamTypeClasses -XFunctionalDependencies -XTypeFamilies
 
 %: %.hxe
 	./$@.hxe

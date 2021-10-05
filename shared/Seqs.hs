@@ -1,18 +1,20 @@
 module Seqs (
-chunksOf,
-collapseRuns,
-count,
-safeHead,
-safeInit,
-safeLast,
-safeMaximumBy,
-safeMinimumBy,
-safeTail,
-splitOn,
-update,
+    chunksOf,
+    collapseRuns,
+    count,
+    forceLength,
+    safeHead,
+    safeInit,
+    safeLast,
+    safeMaximumBy,
+    safeMinimumBy,
+    safeTail,
+    splitOn,
+    update,
+    mapWithIndex,
 ) where
 
-import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt)
+import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt, zipWith)
 
 splitOn :: Eq a => [a] -> [a] -> [[a]]
 splitOn _ [] = []
@@ -48,6 +50,21 @@ update f i xs
           after = tail rest
           toUpdate = head rest
           (before, rest) = splitAt i xs
+
+forceLength :: Int -> [a] -> Maybe [a]
+forceLength n l
+    | length l == n = Just l
+    | otherwise = Nothing
+
+mergeSorted :: Ord a => [a] -> [a] -> [a]
+mergeSorted [] ys = ys
+mergeSorted xs [] = xs
+mergeSorted (x:xs) (y:ys)
+    | x <= y = x:(mergeSorted xs (y:ys))
+    | otherwise = y:(mergeSorted (x:xs) ys)
+
+mapWithIndex :: (Int -> a -> b) -> [a] -> [b]
+mapWithIndex f = zipWith f [0..]
 
 -- NOT EXPORTED
 

@@ -1,4 +1,8 @@
 module One where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import Parsing(parseInput, readRegister)
+import Computing(runProgram)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "12" []
+
+main = adventOfCode parseInput (Just . readRegister 'a' . runProgram) "12" [("1", 42)]
+

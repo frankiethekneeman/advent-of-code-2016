@@ -1,4 +1,6 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfConfigurableCode)
+import ParsingUtils(oneLine)
+import Computing(fillAndChecksum)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "16" []
+main = adventOfConfigurableCode oneLine fillAndChecksum 35651584 "16" [("1", 12, "100"), ("2", 20, "01100")]

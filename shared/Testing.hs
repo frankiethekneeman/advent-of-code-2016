@@ -3,11 +3,14 @@ allTestCases,
 showTestResult,
 testsPass,
 TestCase,
-TestResult
+TestResult,
+ConfigurableTestCase,
+allConfigurableTestCases,
 ) where
-import Solving (solve, Parser, Computor, Solution, toString)
+import Solving (solve, Parser, Computor, ConfigurableComputor, Solution, toString)
 import MonadUtils (applyCollapse)
 
+type ConfigurableTestCase a b = (String, a, b)
 type TestCase a = (String, a)
 type TestResult = (String, Maybe String)
 
@@ -16,6 +19,12 @@ allTestCases parser computor dir cases = sequence $ map getResult cases
     where resolve fname = dir ++ "/ex" ++ fname
           execute fname = executeTestCase parser computor (resolve fname)
           getResult (fname, expected) = fmap (\result -> (fname, result)) (execute fname expected)
+
+allConfigurableTestCases :: Solution b => Eq b => Parser a -> ConfigurableComputor c a b -> String -> [ConfigurableTestCase c b] -> IO [TestResult]
+allConfigurableTestCases parser computor dir cases = sequence $ map getResult cases
+    where resolve fname = dir ++ "/ex" ++ fname
+          execute fname config = executeTestCase parser (computor config) (resolve fname)
+          getResult (fname, config, expected) = fmap (\r -> (fname, r)) (execute fname config expected)
 
 showTestResult :: TestResult -> String
 showTestResult (testName, Nothing) = "Test " ++ testName ++ " Passed."

@@ -3,6 +3,7 @@ solve,
 showSolution,
 Parser,
 Computor,
+ConfigurableComputor,
 Solution,
 toString
 ) where
@@ -11,6 +12,7 @@ import MonadUtils (applyRight, orError)
 
 type Parser a = (String -> Maybe a)
 type Computor a b = (a -> Maybe b)
+type ConfigurableComputor a b c = (a -> Computor b c)
 
 solve :: Parser a -> Computor a b -> String -> IO (Either String b)
 solve parser computor fname = do

@@ -1,4 +1,10 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import Parsing(readDisks, Disk(..))
+import Computing(firstPerfectDrop)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "15" []
+addDisk :: [Disk] -> [Disk]
+addDisk disks = disks ++ [Disk (n + 1) 11 0]
+    where n = foldl max 0 $ map num disks
+
+main = adventOfCode readDisks (firstPerfectDrop . addDisk ) "15" []

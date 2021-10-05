@@ -3,7 +3,7 @@ Instruction (..),
 parseInstruction,
 ) where
 import Text.Read(readMaybe)
-import Seqs(splitOn)
+import Seqs(splitOn, forceLength)
 import Data.List(isPrefixOf, stripPrefix)
 
 data Instruction = Rect Int Int | RotCol Int Int | RotRow Int Int deriving (Show)
@@ -18,11 +18,6 @@ parseInstruction s
     | isPrefixOf rect_pre s = parseRect s
     | isPrefixOf col_pre s = parseCol s
     | isPrefixOf row_pre s = parseRow s
-    | otherwise = Nothing
-
-forceLength :: Int -> [a] -> Maybe [a]
-forceLength n l
-    | length l == n = Just l
     | otherwise = Nothing
 
 parseRect :: String -> Maybe Instruction

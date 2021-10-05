@@ -1,4 +1,15 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import ParsingUtils (oneLine)
+import Computing(sixtyFourthKey, hashString)
+import Debug.Trace(trace)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "14" []
+reApply :: Int -> (a -> a) -> a -> a
+reApply 0 _ = id
+reApply n f = f . reApply (n - 1) f
+
+
+stretch :: String -> String
+stretch = reApply 2016 hashString
+
+main = adventOfCode oneLine (Just . sixtyFourthKey stretch) "14" [("1", 22551)]

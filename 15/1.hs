@@ -1,4 +1,6 @@
 module One where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import Parsing(readDisks)
+import Computing(firstPerfectDrop)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "15" []
+main = adventOfCode readDisks firstPerfectDrop "15" [("1", 5)]

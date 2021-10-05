@@ -1,4 +1,9 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import Parsing(parseInput, readRegister, Computer, writeRegister)
+import Computing(runProgram)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "12" []
+solve2 :: Computer -> Int
+solve2 = readRegister 'a' . runProgram . writeRegister 'c' 1
+
+main = adventOfCode parseInput (Just . solve2) "12" []
