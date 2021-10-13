@@ -33,6 +33,7 @@ import Data.Char (isDigit)
 import Text.Read (readMaybe)
 import Seqs (safeHead)
 import MonadUtils (firstOf)
+import Debug.Trace(trace)
 
 -- A time for Vocabulary.
 -- In this library, I'm working from the following vocab:
@@ -128,6 +129,7 @@ scanChar (c:rest) = Scanned (CharTok c) $ Remainder rest
 
 sequential :: [Scanner] -> Scanner
 sequential [] s = Remainder s
+sequential [scanner] s = scanner s
 sequential (scanner:rest) s = scanRemaining (scanner s) $ sequential rest
 
 alternating :: [Scanner] -> Scanner

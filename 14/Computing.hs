@@ -1,13 +1,11 @@
 module Computing (
-    sixtyFourthKey,
-    hashString
+    sixtyFourthKey
 ) where
 import Numeric(showHex)
 import Data.List(tails, replicate, isInfixOf)
 import Seqs(collapseRuns, safeHead)
-import Distribution.Utils.MD5(md5, showMD5)
-import Data.ByteString.Internal (packChars)
 import MonadUtils(orElse)
+import Hashing(md5String)
 
 sixtyFourthKey :: (String -> String) -> String -> Int
 sixtyFourthKey f salt =  fst $ keys !! 63
@@ -23,8 +21,5 @@ isKey (candidate:rest) = any (`orElse` False) validated
           trip = safeHead . map fst . filter ((>= 3) . snd) . collapseRuns $ candidate
 
 genHash :: String -> Int -> String
-genHash salt i = hashString salted
+genHash salt i = md5String salted
     where salted = salt ++ (show i)
-
-hashString :: String -> String
-hashString = showMD5 . md5 . packChars

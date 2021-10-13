@@ -2,11 +2,13 @@ module Seqs (
     chunksOf,
     collapseRuns,
     count,
+    rotate,
     forceLength,
     safeHead,
     safeInit,
     safeLast,
     safeMaximumBy,
+    safeMaximum,
     safeMinimumBy,
     safeTail,
     splitOn,
@@ -15,6 +17,10 @@ module Seqs (
 ) where
 
 import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt, zipWith)
+
+rotate :: Int -> [a] -> [a]
+rotate n l = back ++ front 
+    where (front, back) = splitAt n l
 
 splitOn :: Eq a => [a] -> [a] -> [[a]]
 splitOn _ [] = []
@@ -40,6 +46,8 @@ safeTail = defang tail
 safeInit = defang init
 safeLast = defang last
 safeMaximumBy = defang2 maximumBy
+safeMaximum :: Ord a => [a] -> Maybe a
+safeMaximum = safeMaximumBy compare
 safeMinimumBy = defang2 minimumBy
 
 update :: (a -> a) -> Int -> [a] -> [a]

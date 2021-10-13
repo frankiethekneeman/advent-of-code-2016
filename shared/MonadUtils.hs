@@ -5,6 +5,7 @@ applyCollapse,
 orElse,
 orElseTry,
 firstOf,
+flatFold,
 ) where
 
 orElse :: Maybe a -> a -> a
@@ -31,3 +32,10 @@ applyRight f (Right val) = f val
 applyCollapse :: (a -> Maybe b) -> Either b a -> Maybe b
 applyCollapse f (Left l) = Just l
 applyCollapse f (Right r) = f r
+
+(<.<) :: Monad m => (a -> m b) -> (c -> m a) -> c -> m b
+(<.<) f g x = f =<< (g x)
+
+flatFold :: Monad m => [a -> m a] -> a -> m a
+flatFold fs v = foldl (>>=) (pure v) fs
+  

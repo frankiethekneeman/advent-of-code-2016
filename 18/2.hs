@@ -1,4 +1,6 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfConfigurableCode)
+import Parsing(parseTiles)
+import Computing(testCases, countSafeTiles)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "18" []
+main = adventOfConfigurableCode parseTiles countSafeTiles 400000 "18" testCases

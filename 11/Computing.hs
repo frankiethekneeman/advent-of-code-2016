@@ -11,7 +11,7 @@ import Data.List (zipWith)
 
 calculateStepsToSolve :: State -> Maybe Int
 calculateStepsToSolve a = (subtract 1) <$> length <$> path 
-    where path = AStar.search distance listMoves a
+    where path = AStar.uniformWeights distance listMoves a
 
 -- Not exported
 

@@ -1,4 +1,13 @@
 module One where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfCode)
+import ParsingUtils(oneLine)
+import Computing(neighbors, dist)
+import qualified AStar
+tests = [("1", "DDRRRD"),
+         ("2", "DDUDRLRRUDRD"),
+         ("3", "DRURDRUDDLLDLUURRDULRLDUUDDDRR")]
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "17" []
+solve :: String -> Maybe String
+solve passcode = head <$> AStar.uniformWeights dist (neighbors passcode) "" 
+
+main = adventOfCode oneLine solve "17" tests
