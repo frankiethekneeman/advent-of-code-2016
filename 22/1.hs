@@ -1,4 +1,10 @@
 module One where
-import AoC (adventOfCode, noOp)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "22" []
+import AoC (adventOfCode)
+import Parsing(readDF, Node)
+import Computing(viablePairs)
+
+countViablePairs :: [Node] -> Maybe Int
+countViablePairs = Just . length . viablePairs
+
+main = adventOfCode readDF countViablePairs "22" []

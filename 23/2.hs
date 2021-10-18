@@ -1,4 +1,6 @@
 module Two where
-import AoC (adventOfCode, noOp)
+import AoC (adventOfConfigurableCode)
+import Assembunny(readProgram)
+import Computing(simulateKeypad)
 
-main = adventOfCode (noOp :: String -> Maybe Int) (noOp :: Int -> Maybe Int) "23" []
+main = adventOfConfigurableCode readProgram simulateKeypad 12 "23" [("1", 1, 3)]

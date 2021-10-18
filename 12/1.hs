@@ -1,8 +1,7 @@
 module One where
 import AoC (adventOfCode)
-import Parsing(parseInput, readRegister)
-import Computing(runProgram)
+import Assembunny(readProgram, runProgram, readFrom, Arg (Register))
 
 
-main = adventOfCode parseInput (Just . readRegister 'a' . runProgram) "12" [("1", 42)]
+main = adventOfCode readProgram (Just . readFrom (Register 'a') . runProgram) "12" [("1", 42)]
 

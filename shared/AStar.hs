@@ -1,10 +1,12 @@
 module AStar (
     uniformWeights,
-    weighted
+    weighted,
+    Step(..)
 ) where
 
 import qualified Data.Set as Set
 import qualified MinPQueue as Queue
+import Debug.Trace(trace)
 
 data Step a = Step Int a
 data Path a = Path Int [a]

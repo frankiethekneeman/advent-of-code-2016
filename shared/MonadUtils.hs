@@ -6,6 +6,8 @@ orElse,
 orElseTry,
 firstOf,
 flatFold,
+(<.<),
+(<.>)
 ) where
 
 orElse :: Maybe a -> a -> a
@@ -35,6 +37,9 @@ applyCollapse f (Right r) = f r
 
 (<.<) :: Monad m => (a -> m b) -> (c -> m a) -> c -> m b
 (<.<) f g x = f =<< (g x)
+
+(<.>) :: Functor f => (a -> b) -> (c -> f a) -> c -> f b
+(<.>) f g x = f <$> g x
 
 flatFold :: Monad m => [a -> m a] -> a -> m a
 flatFold fs v = foldl (>>=) (pure v) fs
