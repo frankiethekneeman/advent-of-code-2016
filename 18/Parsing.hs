@@ -1,6 +1,6 @@
 module Parsing(
+    Tile(..),
     parseTiles,
-    Tile(..)
 ) where
 import ParsingUtils (oneLine, charByChar)
 

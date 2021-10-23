@@ -1,7 +1,7 @@
 module Computing (
-    neighbors,
     dist,
     loc,
+    neighbors,
 ) where
 
 import Hashing(md5String)
@@ -15,7 +15,7 @@ toChar Down = 'D'
 toChar Up = 'U'
 
 isOpen :: String -> Dir -> Bool
-isOpen hash dir = elem key "bcdef"
+isOpen hash dir = key `elem` "bcdef"
     where key = hash !! idx
           idx = case dir of
             Up -> 0
@@ -48,6 +48,3 @@ loc s = (1 + rights - lefts, 1 + downs - ups)
           lefts = length $ filter (=='L') s
           downs = length $ filter (=='D') s
           ups = length $ filter (=='U') s
-
-
-

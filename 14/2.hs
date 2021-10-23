@@ -9,7 +9,6 @@ reApply :: Int -> (a -> a) -> a -> a
 reApply 0 _ = id
 reApply n f = f . reApply (n - 1) f
 
-
 stretch :: String -> String
 stretch = reApply 2016 md5String
 

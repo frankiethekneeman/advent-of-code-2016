@@ -18,7 +18,7 @@ d (x1, y1) (x2, y2) = abs (x1 - x2) + (abs y1 - y2)
 step :: Int -> Int -> Set.Set (Int, Int) -> State -> [State]
 step maxX maxY walls (State goal empty) = map move notWalls
     where move p = if p == goal then State empty p else State goal p
-          notWalls = filter (flip Set.notMember $ walls) inBounds
+          notWalls = filter (`Set.notMember` walls) inBounds
           inBounds = filter (between 0 maxX . fst) . filter (between 0 maxY . snd) $ neighbors
           neighbors = [(ex + 1, ey), (ex - 1, ey), (ex, ey + 1), (ex, ey - 1)]
           (ex, ey) = empty
@@ -35,7 +35,7 @@ getEmpty nodes = (x empty, y empty)
     where empty = head . filter ((==0).used) $ nodes
 
 f :: [Node] -> Maybe Int
-f nodes = (subtract 1 . length) <$> path
+f nodes = subtract 1 . length <$> path
     where path = AStar.uniformWeights dist moves start
           moves = step maxX maxY walls
           start = State (maxX, 0) $ getEmpty nodes
@@ -43,6 +43,5 @@ f nodes = (subtract 1 . length) <$> path
           maxX = maximum . map x $ nodes
           maxY = maximum . map y $ nodes
           toPair n = (x n, y n)
-
 
 main = adventOfCode readDF f "22" [("1", 7)]

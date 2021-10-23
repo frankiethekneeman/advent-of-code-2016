@@ -1,5 +1,5 @@
 module Parsing (
-    parseInput
+    parseInput,
 ) where
 
 import Text.Read(readMaybe)

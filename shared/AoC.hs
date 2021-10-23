@@ -1,8 +1,8 @@
 module AoC (
-adventOfCode,
-adventOfConfigurableCode,
-noOp,
-traceNoOp,
+    adventOfCode,
+    adventOfConfigurableCode,
+    noOp,
+    traceNoOp,
 ) where
 
 import Solving (solve, showSolution, Parser, Computor, Solution, ConfigurableComputor)
@@ -12,7 +12,7 @@ import Debug.Trace(trace)
 adventOfCode :: Eq b => Solution b => Parser a -> Computor a b -> String -> [TestCase b] -> IO ()
 adventOfCode parseF computeF day cases = do
     results <- allTestCases parseF computeF day cases
-    sequence $ map (putStrLn . showTestResult) results
+    mapM_ (putStrLn . showTestResult) results
     putStrLn ""
     if testsPass results
         then do
@@ -24,7 +24,7 @@ adventOfCode parseF computeF day cases = do
 adventOfConfigurableCode :: Eq b => Solution b => Parser a -> ConfigurableComputor c a b -> c -> String -> [ConfigurableTestCase c b] -> IO ()
 adventOfConfigurableCode parseF computeF mainConfig day cases = do
     results <- allConfigurableTestCases parseF computeF day cases
-    sequence $ map (putStrLn . showTestResult) results
+    mapM_ (putStrLn . showTestResult) results
     putStrLn ""
     if testsPass results
         then do

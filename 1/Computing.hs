@@ -1,10 +1,11 @@
 module Computing (
-Heading(..),
-Position(..),
-Location(..),
-applyAllIns,
-distance
+    Heading(..),
+    Location(..),
+    Position(..),
+    applyAllIns,
+    distance
 ) where
+
 import Parsing (Direction(..), Instruction(Instruction))
 
 data Heading = North | South | East | West
@@ -28,10 +29,10 @@ turn South R = West
 turn West R = North
 
 move :: Position -> Heading -> Position
-move (Position x y) North = (Position x (y + 1))
-move (Position x y) South = (Position x (y - 1))
-move (Position x y) East = (Position (x + 1) y)
-move (Position x y) West = (Position (x - 1) y)
+move (Position x y) North = Position x (y + 1)
+move (Position x y) South = Position x (y - 1)
+move (Position x y) East = Position (x + 1) y
+move (Position x y) West = Position (x - 1) y
 
 moveMany :: Position -> Heading -> Int -> [Position]
 moveMany _ _ 0 = []
@@ -41,7 +42,7 @@ moveMany pos heading count = pos':subsequent
           count' = count - 1
 
 applyIns :: Location -> Instruction -> [Location]
-applyIns (Location heading pos) (Instruction dir dist) = map (Location heading') $ positions
+applyIns (Location heading pos) (Instruction dir dist) = map (Location heading') positions
     where heading' = turn heading dir
           positions = moveMany pos heading' dist
 

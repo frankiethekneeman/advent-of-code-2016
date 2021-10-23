@@ -1,7 +1,8 @@
 module Parsing(
+    Range(..),
     parseRanges,
-    Range(..)
 )where
+
 import ParsingUtils(lineByLine)
 import Data.List(sort)
 import Scanning((^&), scanInt, Parseable(..), parse2, grok)
@@ -12,4 +13,4 @@ instance Parseable Range where fromResult = parse2 Range
 rangeScanner = scanInt ^& "-" ^& scanInt
 
 parseRanges :: String -> Maybe [Range]
-parseRanges = (sort <$>) . (lineByLine $ grok rangeScanner)
+parseRanges = (sort <$>) . lineByLine (grok rangeScanner)

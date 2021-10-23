@@ -1,10 +1,9 @@
 module One where
 import AoC (adventOfCode, noOp)
 import Assembunny(Computer(..), readProgram, increment, Instruction, writeRegister)
-import Seqs(safeHead)
+import Seqs(safeHead, repeatUntilNothing)
 import qualified Data.Map as Map
 import Data.List(isPrefixOf)
-import Seqs(repeatUntilNothing)
 
 data State = State {
     insPointer :: Int,
@@ -21,7 +20,7 @@ state (Computer i r _ p) = State i r p
 firstIntGeneratesClockSignal :: Computer -> Maybe Int
 firstIntGeneratesClockSignal c = fst <$> safeHead clocks
     where clocks = filter (generatesClockSignal . snd) indexedCandidates
-          indexedCandidates = zipWith (,) ints candidates
+          indexedCandidates = zip ints candidates
           candidates = map (($ c) . writeRegister 'a') ints
           ints = [1..]
 

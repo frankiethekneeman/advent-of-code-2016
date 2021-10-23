@@ -1,13 +1,13 @@
 module MonadUtils (
-orError,
-applyRight,
-applyCollapse,
-orElse,
-orElseTry,
-firstOf,
-flatFold,
-(<.<),
-(<.>)
+    (<.<),
+    (<.>),
+    applyCollapse,
+    applyRight,
+    firstOf,
+    flatFold,
+    orElse,
+    orElseTry,
+    orError,
 ) where
 
 orElse :: Maybe a -> a -> a
@@ -25,7 +25,7 @@ orError Nothing err = Left err
 
 firstOf :: [Maybe a] -> a -> a
 firstOf [] a = a
-firstOf (m:ms) a = m `orElse` firstOf ms a
+firstOf ms a = foldr orElse a ms
 
 applyRight :: (a -> Either c b) -> Either c a -> Either c b
 applyRight f (Left l) = Left l
@@ -36,11 +36,10 @@ applyCollapse f (Left l) = Just l
 applyCollapse f (Right r) = f r
 
 (<.<) :: Monad m => (a -> m b) -> (c -> m a) -> c -> m b
-(<.<) f g x = f =<< (g x)
+(<.<) f g x = f =<< g x
 
 (<.>) :: Functor f => (a -> b) -> (c -> f a) -> c -> f b
 (<.>) f g x = f <$> g x
 
 flatFold :: Monad m => [a -> m a] -> a -> m a
 flatFold fs v = foldl (>>=) (pure v) fs
-  

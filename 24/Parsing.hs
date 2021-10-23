@@ -19,6 +19,6 @@ parseMaze :: String -> Maze
 parseMaze input = Maze walls locations
     where walls = Set.fromList . map snd . filter ((=='#').fst) $ coordinates
           locations = Map.fromList . map parseLoc . filter (isDigit.fst) $ coordinates
-          coordinates = concat $ zipWith (zipWith (,)) (lines input) matrix
+          coordinates = concat $ zipWith zip (lines input) matrix
           parseLoc (dig, coord) = (digitToInt dig, coord)
 

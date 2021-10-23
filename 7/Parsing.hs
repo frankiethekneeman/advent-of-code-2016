@@ -1,8 +1,8 @@
 module Parsing(
-IPv7,
-isHypernet,
-chars,
-parseIPv7
+    IPv7,
+    chars,
+    isHypernet,
+    parseIPv7,
 ) where
 
 import Seqs(safeTail)
@@ -38,6 +38,6 @@ parseIPv7 = pullSequences Hyponet
 
 pullSequences :: SequenceType -> String -> Maybe IPv7
 pullSequences _ "" = Just []
-pullSequences t str = fmap ((Sequence t lead):) rest'
-    where (lead, rest) = span (/=(endDelim t)) str
+pullSequences t str = fmap (Sequence t lead:) rest'
+    where (lead, rest) = span (/=endDelim t) str
           rest' = pullSequences (next t) =<< getRemainder t rest

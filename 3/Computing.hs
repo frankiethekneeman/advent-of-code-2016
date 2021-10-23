@@ -1,6 +1,7 @@
 module Computing (
-countValid
+    countValid,
 ) where
+
 import Parsing(Triangle(..))
 
 isValid :: Triangle -> Bool

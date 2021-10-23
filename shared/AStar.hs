@@ -1,7 +1,7 @@
 module AStar (
+    Step(..),
     uniformWeights,
     weighted,
-    Step(..)
 ) where
 
 import qualified Data.Set as Set
@@ -41,6 +41,6 @@ weightedSearch dist next seen (Path cost path, paths)
           paths' = Queue.insertAll paths steps
           steps = map prep . filter (not.alreadySeen.vertex) $ next curr
           prep (Step weight vertex) = (cost + weight + dist vertex, Path (cost + weight) (vertex:path))
-          alreadySeen = flip Set.member $ seen'
+          alreadySeen = flip Set.member seen'
           seen' = Set.insert curr seen
 

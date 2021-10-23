@@ -12,6 +12,6 @@ addFoundEquipment (State curr floors) = State curr floors'
     where floors' = update (Set.union foundEquipment) 0 floors
 
 (<.>) :: Functor f => (b -> c) -> (a -> f b) -> a -> f c
-(<.>) second first input = second <$> (first input)
+(<.>) second first input = second <$> first input
 
 main = adventOfCode (addFoundEquipment <.> parseInput) calculateStepsToSolve "11" []

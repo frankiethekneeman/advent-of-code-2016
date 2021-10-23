@@ -22,12 +22,12 @@ reduce [] = []
 reduce [x] = [x]
 reduce (fst:snd:rest) = case combine fst snd of
     Just combo -> reduce (combo:rest)
-    Nothing -> fst:(reduce (snd:rest))
+    Nothing -> fst:reduce (snd:rest)
 
 size :: Range -> Integer
 size (Range min max) = max - min + 1
 
 countAllowed :: Integer -> [Range] -> Maybe Integer
-countAllowed field = Just . (field -) . foldr (+) 0 . map size . reduce
+countAllowed field = Just . (field -) . sum . map size . reduce
 
-main = adventOfConfigurableCode parseRanges countAllowed (4294967296) "20" [("1", 10, 2)]
+main = adventOfConfigurableCode parseRanges countAllowed 4294967296 "20" [("1", 10, 2)]

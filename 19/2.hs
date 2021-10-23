@@ -14,6 +14,5 @@ biggestPowerOf3 :: Int -> Int
 biggestPowerOf3 x
     | x < 3 = 1
     | otherwise = 3 * biggestPowerOf3 (x `div` 3)
-          
 
 main = adventOfCode (readMaybe :: String -> Maybe Int) (Just . whichElfGetsPresents) "19" [("1", 2)]

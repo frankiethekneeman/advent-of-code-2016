@@ -28,4 +28,4 @@ scramble :: String -> [Instruction] -> Maybe String
 scramble s is = flatFold algorithm s
     where algorithm = map fwd is
 
-main = adventOfConfigurableCode (parseInstructions) scramble "abcdefgh" "21" tests
+main = adventOfConfigurableCode parseInstructions scramble "abcdefgh" "21" tests

@@ -13,7 +13,7 @@ maxPathLength :: [String] -> String -> Maybe Int
 maxPathLength [] _ = Nothing
 maxPathLength paths passcode = greaterPath `orElseTry` longestComplete
     where greaterPath = maxPathLength paths' passcode
-          paths' = concat $ map (neighbors passcode) paths
+          paths' = concatMap (neighbors passcode) paths
           longestComplete = safeMaximum lengths
           lengths = map length complete
           complete = filter ((==(4, 4)).loc) paths

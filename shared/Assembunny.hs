@@ -1,13 +1,14 @@
 module Assembunny (
-    Computer(..),
     Arg(..),
-    readProgram,
-    readFrom,
-    writeRegister,
-    runProgram,
+    Computer(..),
+    Instruction,
     increment,
-    Instruction
+    readFrom,
+    readProgram,
+    runProgram,
+    writeRegister,
 ) where
+
 import qualified Data.Map as Map
 import ParsingUtils(lineByLine)
 import Scanning((^|),(^&),remember, scanChar, scanInt, end, ReadableFromToken(..), Token(..), Parseable(..), get, grok, alternating)
@@ -48,7 +49,7 @@ writeRegister r v c = c{registers = registers'}
 
 writeOutput :: Int -> Computer -> Computer
 writeOutput o c = c{output = output'}
-    where output' = o:(output c)
+    where output' = o:output c
 
 jmp :: Int -> Computer -> Computer
 jmp dist c = c{insPointer = insPointer'}
@@ -94,7 +95,7 @@ tgl distSrc c = step c'
             else c{program = program'}
           program' = before ++ [toggled] ++ after
           instructions = program c
-          toggled = toggle $ rest !! 0
+          toggled = toggle $ head rest
           after = drop 1 rest
           (before, rest) = splitAt target instructions
           target = dist + curr
@@ -170,8 +171,8 @@ multIns (Copy src tmp:Increment target:Decrement dec1:ConditionalJump ind1 dist1
     | otherwise = Nothing
     where hasCorrectPattern = dec1 == tmp && dec1 == ind1 && dec2 == ind2 && dec1 /= dec2
           isNotSelfModifying = srcNotModified && distsNotModified
-          srcNotModified = not $ src `elem` modified
-          distsNotModified = (not (dist1 `elem` modified)) && (not (dist2 `elem` modified))
+          srcNotModified = src `notElem` modified
+          distsNotModified = (dist1 `notElem` modified) && (dist2 `notElem` modified)
           modified = [target, dec1, dec2]
           correctJumps = readFrom dist1 c == -2 && readFrom dist2 c == -5
           valid = readFrom src c > 0 && readFrom dec2 c > 0
@@ -179,7 +180,7 @@ multIns (Copy src tmp:Increment target:Decrement dec1:ConditionalJump ind1 dist1
 multIns _ _ = Nothing
 
 -- Parsing
-scanArg = (scanInt ^| scanChar)
+scanArg = scanInt ^| scanChar
 scanDouble = alternating $ map remember ["cpy", "jnz"]
 scanSingle = alternating $ map remember ["inc", "dec", "tgl", "out"]
 scanInstruction = ((scanDouble ^& " " ^& scanArg ^& " " ^& scanArg)
@@ -191,13 +192,13 @@ instance ReadableFromToken Arg where
     readTok _ = Nothing
 
 instance Parseable Instruction where
-    fromResult r = case (get 0 r) of
-        Just "cpy" -> Copy <$> (get 1 r) <*> (get 2 r)
-        Just "inc" -> Increment <$> (get 1 r)
-        Just "dec" -> Decrement <$> (get 1 r)
-        Just "jnz" -> ConditionalJump <$> (get 1 r) <*> (get 2 r)
-        Just "tgl" -> Toggle <$> (get 1 r)
-        Just "out" -> Output <$> (get 1 r)
+    fromResult r = case get 0 r of
+        Just "cpy" -> Copy <$> get 1 r <*> get 2 r
+        Just "inc" -> Increment <$> get 1 r
+        Just "dec" -> Decrement <$> get 1 r
+        Just "jnz" -> ConditionalJump <$> get 1 r <*> get 2 r
+        Just "tgl" -> Toggle <$> get 1 r
+        Just "out" -> Output <$> get 1 r
         _ -> Nothing
 
 readProgram :: String -> Maybe Computer

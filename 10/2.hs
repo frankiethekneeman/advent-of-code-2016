@@ -6,7 +6,7 @@ import Computing(State(..), increment, openingState, isFrozen)
 import qualified Data.Map.Strict as Map
 
 solve :: Rules -> Maybe Int
-solve rules = foldl mult (Just 1) $ map ((flip Map.lookup) outputs) [0..2]
+solve rules = foldl mult (Just 1) $ map (`Map.lookup` outputs) [0..2]
     where mult x y = (*) <$> x <*> y
           (State _ outputs) = exhaust rules $ openingState rules
 

@@ -1,16 +1,16 @@
 module Computing (
-    calculateStepsToSolve
+    calculateStepsToSolve,
 ) where
 
 import Parsing(Item(..), State(..), parseInput)
 import Seqs(update, mapWithIndex)
 import AStar
 import qualified Data.Set as Set
-import Data.Maybe (catMaybes)
+import Data.Maybe (mapMaybe)
 import Data.List (zipWith)
 
 calculateStepsToSolve :: State -> Maybe Int
-calculateStepsToSolve a = (subtract 1) <$> length <$> path 
+calculateStepsToSolve a = subtract 1 . length <$> path 
     where path = AStar.uniformWeights distance listMoves a
 
 -- Not exported
@@ -28,7 +28,7 @@ toOrdable (State curr floors) = OrdableState curr countPairs orphans
     where countPairs = map Set.size pairs
           orphans = zipWith elimPaired pairs floors
           pairs = zipWith Set.intersection generatorElements chipElements
-          elimPaired names items = items Set.\\ (Set.mapMonotonic Microchip names) Set.\\ (Set.mapMonotonic Generator names)
+          elimPaired names items = items Set.\\ Set.mapMonotonic Microchip names Set.\\ Set.mapMonotonic Generator names
           generatorElements = map (Set.mapMonotonic element) generators
           chipElements = map (Set.mapMonotonic element) chips
           (generators, chips) = unzip $ map (Set.partition isGenerator) floors
@@ -39,7 +39,7 @@ element (Generator s) = s
 
 isValidState :: State -> Bool
 isValidState (State _ items) = overloaded == 0
-    where overloaded = foldl (+) 0 . map (Set.size) . map getOverloaded $ items
+    where overloaded = sum . map (Set.size . getOverloaded) $ items
 
 getOverloaded :: Set.Set Item -> Set.Set Item
 getOverloaded items = if Set.size generators == 0 then Set.empty else orphanedMicrochips
@@ -60,8 +60,8 @@ listMoves s@(State curr floors) = ups ++ downs
           doublePayloads = plusOne currFloor =<< singlePayloads
           singlePayloads = map Set.singleton $ Set.toList (floors !! curr)
           currFloor = floors !! curr
-          itemsBelow = foldl (+) 0 . map Set.size . take curr $ floors
-          mv n = (filter isValidState) . catMaybes . (map (move s n)) :: [Set.Set Item] -> [State]
+          itemsBelow = sum . map Set.size . take curr $ floors
+          mv n = filter isValidState . mapMaybe (move s n) :: [Set.Set Item] -> [State]
 
 move :: State -> Int -> Set.Set Item -> Maybe State
 move (State curr floors) dir payload
@@ -73,8 +73,8 @@ move (State curr floors) dir payload
           floors' = update (Set.\\ payload) curr floors
 
 plusOne :: Ord a => Set.Set a -> Set.Set a -> [Set.Set a]
-plusOne adds base = map ((flip Set.insert) base) $ Set.toList (Set.difference adds base)
+plusOne adds base = map (`Set.insert` base) $ Set.toList (Set.difference adds base)
 
 distance :: State -> Int
-distance (State _ floors) = foldl (+) 0 $ mapWithIndex (\no -> \items -> (m - no) * Set.size items) floors
+distance (State _ floors) = sum $ mapWithIndex (\no items -> (m - no) * Set.size items) floors
     where m = length floors - 1

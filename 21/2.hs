@@ -26,7 +26,7 @@ undoRotateLetter c s = seekUndoneRotateLetter c s s
 
 seekUndoneRotateLetter :: Char -> String -> Transform
 seekUndoneRotateLetter c target curr =  test `orElseTry` recurse
-    where test = (\_ -> curr) <$> mfilter (==target) (rotateLetter c curr)
+    where test = curr <$ mfilter (==target) (rotateLetter c curr)
           recurse = seekUndoneRotateLetter c target =<< rotateIns L 1 curr
 
 unscramble :: String -> [Instruction] -> Maybe String
@@ -43,4 +43,4 @@ tests = [("1", "decab", "abcde"),
          ("8", "ecabd", "abcde"),
          ("9", "hcdefbag", "abcdefgh")]
 
-main = adventOfConfigurableCode (parseInstructions) unscramble "fbgdceah" "21" tests
+main = adventOfConfigurableCode parseInstructions unscramble "fbgdceah" "21" tests

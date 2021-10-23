@@ -23,11 +23,11 @@ manhattanDistance (x1, y1) (x2, y2) = xDist + yDist
           yDist = abs (y1 - y2)
 
 neighbors :: Set.Set (Int, Int) -> (Int, Int) -> [(Int, Int)]
-neighbors walls (x, y) = filter ((flip Set.notMember) walls) adjacent
+neighbors walls (x, y) = filter (`Set.notMember` walls) adjacent
     where adjacent = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
 
 findDistance :: Maze -> Int -> Int -> Maybe Int
-findDistance (Maze walls locations) start end = (subtract 1 . length) <$> path
+findDistance (Maze walls locations) start end = subtract 1 . length <$> path
     where path = AStar.uniformWeights dist next origin
           dist = manhattanDistance target
           next = neighbors walls'
@@ -38,7 +38,7 @@ findDistance (Maze walls locations) start end = (subtract 1 . length) <$> path
 
 buildAdjacencyList :: Maze -> Adj
 buildAdjacencyList maze = Map.fromList dists
-    where dists = concat . map toBothDirections $ toFind
+    where dists = concatMap toBothDirections toFind
           toBothDirections (l, r, Just d) = [((l, r), d), ((r, l), d)]
           toBothDirections (l, r, Nothing) = []
           toFind = [(l, r, findDistance maze l r) | l <- locii, r <- locii, l < r]

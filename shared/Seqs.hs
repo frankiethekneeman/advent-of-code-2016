@@ -2,19 +2,19 @@ module Seqs (
     chunksOf,
     collapseRuns,
     count,
-    rotate,
     forceLength,
+    mapWithIndex,
+    repeatUntilNothing,
+    rotate,
     safeHead,
     safeInit,
     safeLast,
-    safeMaximumBy,
     safeMaximum,
+    safeMaximumBy,
     safeMinimumBy,
     safeTail,
     splitOn,
     update,
-    mapWithIndex,
-    repeatUntilNothing,
 ) where
 
 import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt, zipWith, unfoldr)
@@ -69,8 +69,8 @@ mergeSorted :: Ord a => [a] -> [a] -> [a]
 mergeSorted [] ys = ys
 mergeSorted xs [] = xs
 mergeSorted (x:xs) (y:ys)
-    | x <= y = x:(mergeSorted xs (y:ys))
-    | otherwise = y:(mergeSorted (x:xs) ys)
+    | x <= y = x:mergeSorted xs (y:ys)
+    | otherwise = y:mergeSorted (x:xs) ys
 
 mapWithIndex :: (Int -> a -> b) -> [a] -> [b]
 mapWithIndex f = zipWith f [0..]
@@ -84,7 +84,7 @@ repeatUntilNothing f = unfoldr (calcNext<$>) . Just
 splitOnce :: Eq a => [a] -> [a] -> ([a], [a])
 splitOnce _ [] = ([], [])
 splitOnce needle haystack 
-  | isPrefixOf needle haystack = ([], prefixDropped)
+  | needle `isPrefixOf` haystack = ([], prefixDropped)
   | otherwise = (h:l, r)
   where prefixDropped = drop prefixLength haystack
         prefixLength = length needle

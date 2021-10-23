@@ -1,11 +1,11 @@
 module Solving (
-solve,
-showSolution,
-Parser,
-Computor,
-ConfigurableComputor,
-Solution,
-toString
+    Computor,
+    ConfigurableComputor,
+    Parser,
+    Solution,
+    showSolution,
+    solve,
+    toString
 ) where
 
 import MonadUtils (applyRight, orError)
@@ -41,4 +41,4 @@ compute :: Computor a b -> a -> Either String b
 compute computor parsed = orError (computor parsed) "Failed to Compute"
 
 work :: (String -> Maybe a) -> (a -> Maybe b) -> String -> Either String b
-work parser computor = (applyRight (compute computor)).(parse parser)
+work parser computor = applyRight (compute computor) . parse parser

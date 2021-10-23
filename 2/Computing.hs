@@ -1,6 +1,7 @@
 module Computing (
-computeCode
+    computeCode,
 ) where
+
 import Parsing(Direction)
 import Data.Char(intToDigit, toUpper)
 

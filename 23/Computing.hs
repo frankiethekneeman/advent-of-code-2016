@@ -1,6 +1,7 @@
 module Computing (
     simulateKeypad,
 ) where
+
 import Assembunny(Computer, readFrom, Arg(Register), writeRegister, runProgram)
 
 simulateKeypad :: Int -> Computer -> Maybe Int

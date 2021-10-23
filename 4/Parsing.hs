@@ -1,7 +1,8 @@
 module Parsing(
-Room(..),
-parseRooms
+    Room(..),
+    parseRooms,
 ) where
+
 import Seqs (splitOn, safeHead, safeInit, safeLast, collapseRuns)
 import Text.Read (readMaybe)
 import ParsingUtils(lineByLine)
@@ -21,5 +22,4 @@ parseRoom input = Room <$> name <*> sectorId <*> checksum
           sectorId = readMaybe =<< safeHead =<< sectorAndChecksum :: Maybe Int
           checksum = take 5 <$> (safeLast =<< sectorAndChecksum)
           segments = splitOn "-" input
-          sectorAndChecksum = splitOn "[" <$> (safeLast segments) :: Maybe [String]
-
+          sectorAndChecksum = splitOn "[" <$> safeLast segments :: Maybe [String]

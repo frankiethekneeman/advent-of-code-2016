@@ -10,6 +10,6 @@ examples = [("1", 0), ("2", 0), ("3", 2), ("4", 3)]
 
 parseTriangle :: String -> Maybe Triangle
 parseTriangle input = fromList =<< sides
-    where sides = sequence . map (readMaybe :: String -> Maybe Int) $ words input
+    where sides = mapM (readMaybe :: String -> Maybe Int) $ words input
 
 main = adventOfCode (lineByLine parseTriangle) (Just . countValid) "3" examples

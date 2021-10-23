@@ -17,12 +17,11 @@ data Node = Node {
 } deriving (Show, Eq, Ord)
 
 instance Parseable Node where
-    fromResult r = Node <$> x <*> y <*> size <*> used <*> (Just False)
+    fromResult r = Node <$> x <*> y <*> size <*> used <*> Just False
         where x = fromInteger <$> get 0 r
               y = fromInteger <$> get 1 r
               size = fromInteger <$> get 3 r
               used = fromInteger <$> get 5 r
 
 readDF :: String -> Maybe [Node]
-readDF = sequence . map (grok scanLine) . drop 2 . lines
-
+readDF = mapM (grok scanLine) . drop 2 . lines

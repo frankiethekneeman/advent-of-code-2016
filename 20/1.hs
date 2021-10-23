@@ -4,7 +4,7 @@ import Parsing(parseRanges, Range(..))
 
 smallestUnblocked :: Integer -> [Range] -> Integer
 smallestUnblocked i [] = i
-smallestUnblocked i ((Range l h):rest)
+smallestUnblocked i (Range l h:rest)
     | i < l  = i
     | i < h = smallestUnblocked (h + 1) rest
     | otherwise = smallestUnblocked i rest 

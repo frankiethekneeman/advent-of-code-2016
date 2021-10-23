@@ -8,12 +8,12 @@ import Data.List(find)
 examples = [("1", "05ace8e3")]
 
 replaceChar :: String -> (Int, Char) -> String
-replaceChar str (pos, char) = (take pos str) ++ [char] ++ (drop (pos + 1) str)
+replaceChar str (pos, char) = take pos str ++ [char] ++ drop (pos + 1) str
 
 calcPw :: String -> Maybe String
-calcPw id = sequence $ map charAt [0..7]
+calcPw id = mapM charAt [0..7]
     where characters = map toTuple $ getInterestingHashes id
           toTuple hash = (digitToInt $ head hash, head $ tail hash)
-          charAt p = fmap snd $ find ((==p).fst) characters
+          charAt p = snd <$> find ((==p).fst) characters
 
 main = adventOfCode oneLine calcPw "5" examples

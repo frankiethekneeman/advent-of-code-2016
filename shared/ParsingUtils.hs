@@ -1,16 +1,16 @@
 module ParsingUtils (
-lineByLine,
-charByChar,
-oneLine
+    charByChar,
+    lineByLine,
+    oneLine
 ) where
 
 -- Parse a "file" of data one line at a time
 lineByLine :: (String -> Maybe a) -> String -> Maybe [a]
-lineByLine f = sequence . (map f) . lines 
+lineByLine f = mapM f . lines 
 
 -- Parse a "line" of data one character at a time
 charByChar :: (Char -> Maybe a) -> String -> Maybe [a]
-charByChar f = sequence . (map f)
+charByChar = mapM
 
 oneLine :: String -> Maybe String
 oneLine = Just . init

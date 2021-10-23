@@ -8,7 +8,7 @@ import qualified Data.Set as Set
 testCases = [("4", 4)]
 
 solve :: [Instruction] -> Maybe Int
-solve instructions = fmap distance $ firstRevisited Set.empty positions 
+solve instructions = distance <$> firstRevisited Set.empty positions 
     where positions = applyAllIns (Location North (Position 0 0)) instructions
 
 firstRevisited :: Set.Set Position -> [Location] -> Maybe Location

@@ -1,6 +1,6 @@
 module Parsing (
-Direction(..),
-parseDirections
+    Direction(..),
+    parseDirections,
 ) where
 
 import ParsingUtils(lineByLine, charByChar)

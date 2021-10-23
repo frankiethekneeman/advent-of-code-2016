@@ -1,5 +1,5 @@
 module Computing (
-getInterestingHashes
+    getInterestingHashes,
 ) where
 
 import Distribution.Utils.MD5(md5, showMD5)

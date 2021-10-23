@@ -1,14 +1,14 @@
 module Computing (
-decodeTransmission,
-toFrequencies,
-cmpSnd
+    cmpSnd,
+    decodeTransmission,
+    toFrequencies,
 ) where
 
 import Data.List(transpose, sort)
 import Seqs(collapseRuns)
 
 decodeTransmission :: (String -> Maybe Char) -> [String] -> Maybe String
-decodeTransmission pick = sequence . map pick . transpose
+decodeTransmission pick = mapM pick . transpose
 
 toFrequencies :: Ord a => [a] -> [(a, Int)]
 toFrequencies = collapseRuns . sort

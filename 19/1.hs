@@ -4,7 +4,7 @@ import Text.Read(readMaybe)
 
 getWinner :: Int -> Int
 getWinner contestants = 2 * l + 1
-    where l = contestants - (largestSetBit contestants)
+    where l = contestants - largestSetBit contestants
 
 largestSetBit :: Int -> Int
 largestSetBit 1 = 1

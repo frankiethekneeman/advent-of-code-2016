@@ -1,11 +1,13 @@
 module Computing (
-Marker(..),
-decompressionParts,
+    Marker(..),
+    decompressionParts,
 ) where
+
 import Data.List(break, replicate, stripPrefix)
 import Seqs(splitOn, forceLength)
 import MonadUtils(orElse)
 import Text.Read(readMaybe)
+
 pair :: a -> b -> (a, b)
 pair a b = (a, b)
 
@@ -15,7 +17,7 @@ pullDecompressedPrefix = break (=='(')
 data Marker = Marker {chars, reps :: Int} deriving (Show)
 
 getAddressed :: (Marker, String) -> (String, String)
-getAddressed ((Marker chars _), s) = splitAt chars s
+getAddressed (Marker chars _, s) = splitAt chars s
 
 getMarker :: String -> Maybe (Marker, String)
 getMarker s = pair <$> marker <*> rest

@@ -1,5 +1,5 @@
 module Computing (
-    fillAndChecksum
+    fillAndChecksum,
 ) where 
 
 import Data.List(reverse, unfoldr)
@@ -7,7 +7,7 @@ import Seqs(chunksOf)
 
 inv :: String -> String
 inv [] = []
-inv (x:xs) = (if x == '0' then '1' else '0'):(inv xs)
+inv xs = map (\x -> if x == '0' then '1' else '0') xs
 
 dragon seed = concat $ seed : unfoldr (Just . next) seed
     where next a = let b = '0' : (inv . reverse $ a) in (b, a ++ b)

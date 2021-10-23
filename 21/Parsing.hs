@@ -1,7 +1,7 @@
 module Parsing (
     Dir(..),
     Instruction(..),
-    parseInstructions
+    parseInstructions,
 ) where
 
 import ParsingUtils(lineByLine)

@@ -1,7 +1,7 @@
 module Computing (
-Pixel(..),
-Screen,
-runProgram
+    Pixel(..),
+    Screen,
+    runProgram,
 ) where
 
 import Parsing(Instruction(..))
@@ -23,7 +23,7 @@ rotate n xs = right ++ left
 
 apply :: Screen -> Instruction -> Screen
 apply s (Rect width height) = modifiedRows ++ unmodifiedRows
-    where modifiedRows = map ((replicate width On)++) upperRightQuadrant
+    where modifiedRows = map (replicate width On ++) upperRightQuadrant
           upperRightQuadrant = map (drop width) rowsToModify
           (rowsToModify, unmodifiedRows) = splitAt height s
 

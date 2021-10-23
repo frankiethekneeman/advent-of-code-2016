@@ -1,6 +1,7 @@
 module Hashing (
-    md5String
+    md5String,
 ) where
+
 import Distribution.Utils.MD5(md5, showMD5)
 import Data.ByteString.Internal (packChars)
 

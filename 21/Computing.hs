@@ -1,11 +1,11 @@
 module Computing (
     Transform,
-    positionSwap,
     letterSwap,
+    move,
+    positionSwap,
+    rev,
     rotateIns,
     rotateLetter,
-    rev,
-    move,
 ) where
 
 import Parsing(Dir(..), Instruction(..))
@@ -48,7 +48,7 @@ rotateLetter c s = doRot =<< elemIndex c s
 rev :: Int -> Int -> Transform
 rev first second str
     | first > second = rev second first str
-    | otherwise = Just $ begin ++ (reverse mid) ++ end
+    | otherwise = Just $ begin ++ reverse mid ++ end
     where (begin, rest) = splitAt first str
           (mid, end) = splitAt (second - first + 1) rest
 
