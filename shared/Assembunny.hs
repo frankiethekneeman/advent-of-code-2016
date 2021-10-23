@@ -1,21 +1,24 @@
 module Assembunny (
-    Computer,
+    Computer(..),
     Arg(..),
     readProgram,
     readFrom,
     writeRegister,
     runProgram,
+    increment,
+    Instruction
 ) where
 import qualified Data.Map as Map
 import ParsingUtils(lineByLine)
 import Scanning((^|),(^&),remember, scanChar, scanInt, end, ReadableFromToken(..), Token(..), Parseable(..), get, grok, alternating)
 import MonadUtils(orElse, (<.>), orElseTry)
-import Seqs(safeHead)
+import Seqs(safeHead, repeatUntilNothing)
 
 -- TYPES
 data Computer = Computer {
     insPointer :: Int,
     registers :: Map.Map Char Int,
+    output :: [Int], --a STACK, most recent output at the front.
     program :: [Instruction]
 } deriving (Show)
 
@@ -24,13 +27,14 @@ data Instruction = Copy Arg Arg
                  | Decrement Arg
                  | ConditionalJump Arg Arg
                  | Toggle Arg
-                 deriving (Eq, Show)
+                 | Output Arg
+                 deriving (Eq, Ord, Show)
 
-data Arg = Register Char | Value Int deriving (Eq, Show)
+data Arg = Register Char | Value Int deriving (Eq, Ord, Show)
 
 -- Construction
 new :: [Instruction] -> Computer
-new = Computer 0 Map.empty
+new = Computer 0 Map.empty []
 
 -- Modification 
 readFrom :: Arg -> Computer -> Int
@@ -41,6 +45,10 @@ readFrom (Register r) c = registerValue `orElse` 0
 writeRegister :: Char -> Int -> Computer -> Computer
 writeRegister r v c = c{registers = registers'}
     where registers' = Map.insert r v $ registers c
+
+writeOutput :: Int -> Computer -> Computer
+writeOutput o c = c{output = output'}
+    where output' = o:(output c)
 
 jmp :: Int -> Computer -> Computer
 jmp dist c = c{insPointer = insPointer'}
@@ -58,6 +66,7 @@ toggle (Increment a) = Decrement a
 toggle (ConditionalJump l r) = Copy l r
 toggle (Decrement a) = Increment a
 toggle (Toggle a) = Increment a
+toggle (Output a) = Increment a
 toggle (Copy l r) = ConditionalJump l r
 
 -- Command implementations
@@ -92,11 +101,17 @@ tgl distSrc c = step c'
           dist = readFrom distSrc c
           curr = insPointer c
 
+out :: Arg -> Computer -> Computer
+out src c = step $ writeOutput val c
+    where val = readFrom src c
+
+--PseudoInstructions born from optimization.
 add :: Char -> Char -> Computer -> Computer
 add src target c = jmp 3 . writeRegister target sum . writeRegister src 0 $ c
     where sum = srcVal + targetVal
           srcVal = readFrom (Register src) c
           targetVal = readFrom (Register target) c
+
 mult :: Arg -> Char -> Char -> Char -> Computer -> Computer
 mult op1 op2 target tmp c = jmp 5 . writeRegister target total . writeRegister tmp 0 . writeRegister op2 0 $ c
     where total = op1Val * op2Val + targetVal
@@ -114,16 +129,19 @@ execute (Decrement (Register r)) = dec r
 execute (Decrement _) = step
 execute (ConditionalJump val dist) = jnz val dist
 execute (Toggle dist) = tgl dist
+execute (Output arg) = out arg
+
 
 runProgram :: Computer -> Computer
-runProgram c@(Computer ptr _ program) = case getInstruction c of
-        Just f -> runProgram $ f c
-        Nothing -> c
+runProgram = last . repeatUntilNothing increment
+
+increment :: Computer -> Maybe Computer
+increment c = getInstruction c <*> Just c
 
 type Optimizer = [Instruction] -> Computer -> Maybe (Computer -> Computer)
 
 getInstruction :: Computer -> Maybe (Computer -> Computer)
-getInstruction c@(Computer ptr _ program) = foldl orElseTry Nothing optimizations
+getInstruction c@(Computer ptr _ _ program) = foldl orElseTry Nothing optimizations
     where optimizations = map attempt optimizers
           attempt o = o upcoming c
           optimizers = [multIns, addIns, oneIns]
@@ -160,12 +178,10 @@ multIns (Copy src tmp:Increment target:Decrement dec1:ConditionalJump ind1 dist1
 
 multIns _ _ = Nothing
 
-
-
 -- Parsing
 scanArg = (scanInt ^| scanChar)
 scanDouble = alternating $ map remember ["cpy", "jnz"]
-scanSingle = alternating $ map remember ["inc", "dec", "tgl"]
+scanSingle = alternating $ map remember ["inc", "dec", "tgl", "out"]
 scanInstruction = ((scanDouble ^& " " ^& scanArg ^& " " ^& scanArg)
                   ^| (scanSingle ^& " " ^& scanArg)) ^& end
 
@@ -181,6 +197,7 @@ instance Parseable Instruction where
         Just "dec" -> Decrement <$> (get 1 r)
         Just "jnz" -> ConditionalJump <$> (get 1 r) <*> (get 2 r)
         Just "tgl" -> Toggle <$> (get 1 r)
+        Just "out" -> Output <$> (get 1 r)
         _ -> Nothing
 
 readProgram :: String -> Maybe Computer

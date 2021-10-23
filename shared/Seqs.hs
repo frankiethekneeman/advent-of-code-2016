@@ -14,9 +14,10 @@ module Seqs (
     splitOn,
     update,
     mapWithIndex,
+    repeatUntilNothing,
 ) where
 
-import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt, zipWith)
+import Data.List (isPrefixOf, group, maximumBy, minimumBy, splitAt, zipWith, unfoldr)
 
 rotate :: Int -> [a] -> [a]
 rotate n l = back ++ front 
@@ -73,6 +74,10 @@ mergeSorted (x:xs) (y:ys)
 
 mapWithIndex :: (Int -> a -> b) -> [a] -> [b]
 mapWithIndex f = zipWith f [0..]
+
+repeatUntilNothing :: (a -> Maybe a) -> a -> [a]
+repeatUntilNothing f = unfoldr (calcNext<$>) . Just
+    where calcNext x = (x, f x)
 
 -- NOT EXPORTED
 
